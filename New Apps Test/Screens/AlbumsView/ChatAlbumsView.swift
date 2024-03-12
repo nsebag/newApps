@@ -37,9 +37,10 @@ struct ChatAlbumsView: View {
                     }
                 }
                 .navigationDestination(item: $selectedAlbum) { album in
-                    Text(album.title)
+                    ChatView(chatAlbum: album)
                 }
         }
+        .tint(.white)
     }
 }
 

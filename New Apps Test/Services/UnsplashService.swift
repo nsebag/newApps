@@ -21,7 +21,7 @@ enum UnsplashError: Error {
 struct UnsplashService {
     // TODO: Use XCEnvironment for minimal security
     private let url: String = "https://api.unsplash.com/"
-    private let accessKey: String = "8j7cdQS9HM1tfIomk_dUwqrIZ7wnymEECz6xk6OPP6k"
+    private let accessKey: String = "5a3kTAMQ1YvFj7lmKQCP_UOPRTntVhQ24JAGGebWCm4"
     private var httpHeaders: [String: String] {
         [
             "Accept-Version": "v1",
@@ -42,7 +42,6 @@ struct UnsplashService {
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             let pictures = try JSONDecoder().decode([UnsplashImage].self, from: data)
-            print("here \(pictures)")
             return .success(pictures)
         } catch let error {
             return .failure(error)

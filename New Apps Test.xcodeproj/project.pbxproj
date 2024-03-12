@@ -23,6 +23,8 @@
 		59168DD22BA0C0AA00475409 /* ChatAlbumsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59168DD12BA0C0AA00475409 /* ChatAlbumsViewModel.swift */; };
 		59168DD62BA0D47D00475409 /* QuickSendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59168DD52BA0D47D00475409 /* QuickSendView.swift */; };
 		59168DD82BA0D64E00475409 /* QuickSendViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59168DD72BA0D64E00475409 /* QuickSendViewCell.swift */; };
+		59168DDB2BA0EA8B00475409 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59168DDA2BA0EA8B00475409 /* ChatView.swift */; };
+		59168DDD2BA0EA9800475409 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59168DDC2BA0EA9800475409 /* ChatViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,8 @@
 		59168DD12BA0C0AA00475409 /* ChatAlbumsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAlbumsViewModel.swift; sourceTree = "<group>"; };
 		59168DD52BA0D47D00475409 /* QuickSendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSendView.swift; sourceTree = "<group>"; };
 		59168DD72BA0D64E00475409 /* QuickSendViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSendViewCell.swift; sourceTree = "<group>"; };
+		59168DDA2BA0EA8B00475409 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		59168DDC2BA0EA9800475409 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +166,7 @@
 		59168DC12BA0A02300475409 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				59168DD92BA0EA7E00475409 /* InboxView */,
 				59168DD32BA0D46200475409 /* QuickSendView */,
 				59168DCC2BA0C06C00475409 /* AlbumsView */,
 				59168DC22BA0A02B00475409 /* ImagesView */,
@@ -204,6 +209,15 @@
 				59168DD72BA0D64E00475409 /* QuickSendViewCell.swift */,
 			);
 			path = QuickSendView;
+			sourceTree = "<group>";
+		};
+		59168DD92BA0EA7E00475409 /* InboxView */ = {
+			isa = PBXGroup;
+			children = (
+				59168DDA2BA0EA8B00475409 /* ChatView.swift */,
+				59168DDC2BA0EA9800475409 /* ChatViewModel.swift */,
+			);
+			path = InboxView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,10 +351,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				59168DC62BA0A04800475409 /* ImagesViewModel.swift in Sources */,
+				59168DDB2BA0EA8B00475409 /* ChatView.swift in Sources */,
 				59168DCB2BA0A40200475409 /* ImageViewControlsOverlay.swift in Sources */,
 				59168DD02BA0C0A200475409 /* ChatAlbumsView.swift in Sources */,
 				14E2F7362B9F6385007CCA2C /* ChatService.swift in Sources */,
 				59168DC92BA0A33300475409 /* ImageFullscreenCell.swift in Sources */,
+				59168DDD2BA0EA9800475409 /* ChatViewModel.swift in Sources */,
 				59168DD22BA0C0AA00475409 /* ChatAlbumsViewModel.swift in Sources */,
 				59168DD62BA0D47D00475409 /* QuickSendView.swift in Sources */,
 				59168DD82BA0D64E00475409 /* QuickSendViewCell.swift in Sources */,
@@ -506,6 +522,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"New Apps Test/Preview Content\"";
+				DEVELOPMENT_TEAM = Y3866C569N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -544,6 +561,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"New Apps Test/Preview Content\"";
+				DEVELOPMENT_TEAM = Y3866C569N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

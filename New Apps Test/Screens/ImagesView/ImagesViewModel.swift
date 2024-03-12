@@ -24,6 +24,7 @@ class ImagesViewModel: ObservableObject {
     private(set) var loading: Bool = false
     
     func fetchLatestPictures() async {
+        print("here fetch")
         await setLoading(true)
         currentPage += 1
         let result = await unsplashService.fetchLatestImages(page: currentPage)
