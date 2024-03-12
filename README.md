@@ -1,51 +1,41 @@
-# Voodoo iOS Founding Engineer Test
+# iOS Founding Engineer Test
 
-## Project Overview
+This small README to explain my basic thoughts doing this test.
+## I sincerely hope I'll be able to move to the next steps in the process to have a more in-depth discussion about what I did.
 
-Welcome. This challenge is designed to evaluate your technical skills, creativity, 
-and ability to deliver a compelling product in terms of both user interface (UI) and user experience (UX) in a limited time.
+## Removed precise instruction for Google Reference
 
-You will be working on an app to share photos and chat with friends:
-- *User problem*: apps such as Instagram and Snapchat have become public façades where I share highly curated pictures. I can share raw, fun pictures with my friends and chat on apps like WhatsApp, but they’re not really photo-centric.
-- *Job to be done*: 1/ share ‘real’ pictures with close friends and chat, 2/ keep a shared collection of common memories.
+The goal was to build a photo-centric social chat app.
+There are two commits:
+    - The one made at 4 hours of work, for you to see what I did in this time constraint
+    - One more made after 1h30 more to improve a few things and add a chat-ui mock
 
-This project is set up as a bootstrap that you will need to complete within 4 hours.
+There are a few notes in the codes explaining some decisions
+
+## Concept
+
+The app follows a very basic MVVM architecture. For the sake of speed, no real clean-architecture was implemented more than basic layer separation between views and data.
+
+UX is TikTok inspired, it was the safest solution to build multiple screens in such a short time.
+The idea, is that a user would scroll through random images from Unsplash, and if they want, send images to their friends in a conversation.
+
+There are three screens in the app:
+    - The fullscreen paged scrollview to go through each available image
+    - The Album page that is basically the start point of messaging navigation. It's called Album in order to emphasize, the photo-centric experience
+    - A very basic chat message (a mockup really) that aims at showing another way of implementing scroll based UIs in SwiftUI
+
+Minimal component reusability was implemented, still for time save. In a real project, a ReusableComponents folder would have been created to avoid some code duplication
+
+## What I Don't like
+
+Screen data is not linked one another, I would have spent the extra hour but I'm already 1h30 hour ahead of schedule.
+I would've loved working on a Custom Layout for images both for the Album view as well as for the ImageGallery View (that is not developed, but would be accessible from top-right button on chat view)
+I think UX-wise I could've gone further. 
+
+## What I like
+
+I think I've been able to demonstrate a few things, such as List, Scrollviews, basic navigation, basic architecture, animations etc...
+I think the result looks OK with the time constraint, even though HIGHLY improvable.
 
 
-## Objectives
-
-Your main objectives are to:
-
-- *Implement Core Features:* build out the key functionalities of the photo-centric and chat application.
-- *Focus on UI/UX:* design and implement a user interface that is intuitive, simple, and visually appealing. We're looking for innovation in how users interact with the app.
-- *Write Clean Code:* ensure your code is clean, well-organized, and performance-optimized.
-
-Feel free to implement any additional features you believe would enhance the application. Bonus functionalities are highly encouraged and welcomed.
-
-## Key Features to Implement
-
-- Photo Gallery: users should be able to view a collection of photos fetched from the Unsplash API (feel free to fix & improve the proposed implementation).
-- Photo Selection: implement a creative and user-friendly interface for selecting and sharing photos.
-- Chat Interface: design and implement a prototype of a chat feature where users can send messages and share photos (without necessary being connected to a real backend).
-
-
-## Evaluation Criteria
-
-You will be evaluated on:
-
-- UI/UX Innovation: creativity in the app design and user interaction.
-- Technical Proficiency: effective use of iOS technologies and coding best practices.
-- Problem Solving: ability to address challenges with efficient solutions.
-
-## Getting Started
-
-- Review the project structure and the placeholders for the core features.
-- Implement the features as outlined, focusing on UI/UX and code quality.
-
-## Submission Guidelines
-
-- Complete your work within 4 hours and ensure the project is error-free.
-- Document any significant decisions or approaches you took.
-- Submit your project via email as a zip file or a GitHub repository link.
-
-Good luck, we're looking forward to reviewing your solution!
+## Overall it was fun although a bit short in 4 hours.
