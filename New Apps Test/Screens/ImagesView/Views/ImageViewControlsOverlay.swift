@@ -127,7 +127,7 @@ private extension ImageViewControlsOverlay {
                     VStack {
                         HStack {
                             Text("Add to album")
-                                .font(.headline)
+                                .font(.title)
                                 .foregroundColor(.white)
                             
                             Spacer()

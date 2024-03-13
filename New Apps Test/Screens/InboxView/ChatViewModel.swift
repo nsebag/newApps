@@ -28,19 +28,16 @@ class ChatViewModel: ObservableObject {
     @Published private(set) var messages: [ChatMessage] = []
     @Published var currentMessage: String = ""
     
+    let randomIndex: Int
     let chatAlbum: ChatAlbum
     
     init(chatAlbum: ChatAlbum) {
         self.messages = []
         self.chatAlbum = chatAlbum
+        self.randomIndex = Int.random(in: 0..<chatAlbum.images.count)
         self.messages = makeMock()
     }
-    
-    func getRandomAlbumImage() -> URL {
-        let randomIndex = Int.random(in: 0..<chatAlbum.images.count)
-        return chatAlbum.images[randomIndex]
-    }
-    
+        
     func sendMessage() {
         guard !currentMessage.isEmpty else { return }
         messages.append(
@@ -66,7 +63,7 @@ private extension ChatViewModel {
             ),
             ChatMessage(
                 body: "Wow looks so great",
-                image: nil,
+                image: chatAlbum.images.last,
                 user: "Me",
                 sentByMe: true
             )

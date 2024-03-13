@@ -10,12 +10,12 @@ import SwiftUI
 struct ChatView: View {
     @StateObject
     private var viewModel: ChatViewModel
-    @State
-    private var scrollPosition: UUID?
+    
+    @FocusState
+    private var isFocused: Bool
     
     init(chatAlbum: ChatAlbum) {
         _viewModel = StateObject(wrappedValue: ChatViewModel(chatAlbum: chatAlbum))
-        scrollPosition = viewModel.messages.last?.id
     }
     
     var body: some View {
@@ -33,7 +33,7 @@ struct ChatView: View {
                 )
             }
             .background {
-                AsyncImage(url: viewModel.getRandomAlbumImage()) { image in
+                AsyncImage(url: viewModel.chatAlbum.images[viewModel.randomIndex]) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -55,9 +55,13 @@ private extension ChatView {
     var chatView: some View {
         VStack(spacing: 0) {
             chatMessages
+                .onTapGesture {
+                    guard isFocused else { return }
+                    isFocused.toggle()
+                }
+            
             chatInput
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     var chatMessages: some View {
@@ -99,7 +103,7 @@ private extension ChatView {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(.ultraThickMaterial)
                 }
-                .padding(2)
+                .padding(4)
             }
             
             Text(message.body)
@@ -110,7 +114,7 @@ private extension ChatView {
                     alignment: message.sentByMe ? .trailing : .leading
                 )
                 .multilineTextAlignment(message.sentByMe ? .trailing : .leading)
-                .padding(8)
+                .padding(4)
         }
         .background {
             RoundedRectangle(cornerRadius: 8)
@@ -119,7 +123,7 @@ private extension ChatView {
     }
     
     var chatInput: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 8) {
             chatTextField
             
             Button(
@@ -134,21 +138,20 @@ private extension ChatView {
             )
             .disabled(viewModel.currentMessage == "")
         }
-        .padding([.top, .horizontal], 16)
+        .padding([.top, .horizontal], 8)
         .background(.black, ignoresSafeAreaEdges: .bottom)
     }
     
     var chatTextField: some View {
-        TextField(text: $viewModel.currentMessage) {
+        TextField(text: $viewModel.currentMessage, axis: .vertical) {
             Text("Type message here..")
                 .font(.body)
         }
+        .textFieldStyle(.roundedBorder)
+        .lineLimit(4)
+        .focused($isFocused)
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
-        .background {
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white, lineWidth: 1)
-        }
     }
 }
 
