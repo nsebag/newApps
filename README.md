@@ -1,41 +1,31 @@
-# iOS Founding Engineer Test
-
-This small README to explain my basic thoughts doing this test.
-## I sincerely hope I'll be able to move to the next steps in the process to have a more in-depth discussion about what I did.
-
-## Removed precise instruction for Google Reference
-
-The goal was to build a photo-centric social chat app.
-There are two commits:
-    - The one made at 4 hours of work, for you to see what I did in this time constraint
-    - One more made after 1h30 more to improve a few things and add a chat-ui mock
-
-There are a few notes in the codes explaining some decisions
-
-## Concept
-
-The app follows a very basic MVVM architecture. For the sake of speed, no real clean-architecture was implemented more than basic layer separation between views and data.
-
-UX is TikTok inspired, it was the safest solution to build multiple screens in such a short time.
-The idea, is that a user would scroll through random images from Unsplash, and if they want, send images to their friends in a conversation.
-
-There are three screens in the app:
-    - The fullscreen paged scrollview to go through each available image
-    - The Album page that is basically the start point of messaging navigation. It's called Album in order to emphasize, the photo-centric experience
-    - A very basic chat message (a mockup really) that aims at showing another way of implementing scroll based UIs in SwiftUI
-
-Minimal component reusability was implemented, still for time save. In a real project, a ReusableComponents folder would have been created to avoid some code duplication
-
-## What I Don't like
-
-Screen data is not linked one another, I would have spent the extra hour but I'm already 1h30 hour ahead of schedule.
-I would've loved working on a Custom Layout for images both for the Album view as well as for the ImageGallery View (that is not developed, but would be accessible from top-right button on chat view)
-I think UX-wise I could've gone further. 
-
-## What I like
-
-I think I've been able to demonstrate a few things, such as List, Scrollviews, basic navigation, basic architecture, animations etc...
-I think the result looks OK with the time constraint, even though HIGHLY improvable.
+Here we go again for another run at **Voodoo** product engineering test. The goal was set to create a new way to share photos between friends.
 
 
-## Overall it was fun although a bit short in 4 hours.
+# Concept
+
+When I think about memories and images with friends, there are usually two things coming to my mind, the place and eventually some song.
+The idea I'm submitting today, is a social media were users create shared photo albums around a place, a trip etc.. But the place comes first. We all grew up meeting our friends in the same place almost every day. We all did the greatest trips of our lifes far from home, meeting strangers and building memories.
+
+This app aims at marking this places with all our memories.
+
+In many ways this idea is improvable and the UI/UX too. But I think this shows some other skills that I couldn't on the first time. It's something that I believe to be new, and to make sense.
+***Hopefully next steps in the process will let me explain more***
+
+# Vision
+
+I see two main iterations on this app after this MVP vision:
+
+ - First I would love to implement some way to link a music to an image and create a playlist out of an album. Memories come with music, at least to me.
+ - Second I would dig some way to create localised chat. For example, discussed with all of my friends that ever post in Paris, or in Tokyo. This could be an interesting way to create new interactions with people around me such as "Who's in town for a drink ? " or "Any tips for the best view on the city ?".
+
+# Commits
+
+- First commit made on Saturday it a first MVP, it represents around 7 hours of work. It doesn't contain the photo gallery nor some of the interactions. 
+
+
+# Technicality
+
+The app is built using full SwiftUI and will only support iOS 17 devices. 
+For the map I had to build a "custom" clusterisation algorithm, please note that I used some tools such as a few medium posts and chatGPT to build a very thorough algorithm using the DBScan logic. The code is dirty, not optimised, and far from ideal I just needed that to implement my idea in full SwiftUI.
+
+Compared to my first try at this test I would say that the code is "messier" in many ways its architecture could be improved. I believe that I already proved on that point, so I just focused on building my product.

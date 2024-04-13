@@ -11,12 +11,12 @@ import SwiftUI
 struct New_Apps_TestApp: App {
     var body: some Scene {
         WindowGroup {
-            ImagesView()
+            MapView()
                 /*
                  * NOTE: Sending environment viewmodel to comply with a more "real-life" pattern
                  * In a real life scenario, the chat would be initialized at some post-login navigation root, to ensure that websockets/webhooks used for chat are kept alive 
                  */
-                .environmentObject(ChatAlbumsViewModel())
+                .environmentObject(BrowserViewModel())
         }
     }
 }
