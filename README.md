@@ -1,6 +1,5 @@
 Here we go again for another run at **Voodoo** product engineering test. The goal was set to create a new way to share photos between friends.
 
-
 # Concept
 
 When I think about memories and images with friends, there are usually two things coming to my mind, the place and eventually some song.
@@ -13,15 +12,16 @@ In many ways this idea is improvable and the UI/UX too. But I think this shows s
 
 # Vision
 
-I see two main iterations on this app after this MVP vision:
+I see three main iterations on this app after this MVP vision:
 
- - First I would love to implement some way to link a music to an image and create a playlist out of an album. Memories come with music, at least to me.
- - Second I would dig some way to create localised chat. For example, discussed with all of my friends that ever post in Paris, or in Tokyo. This could be an interesting way to create new interactions with people around me such as "Who's in town for a drink ? " or "Any tips for the best view on the city ?".
+ - Ability to discuss on an image separately than on an album
+ - Implementing some way to link a music to an image and create a playlist out of an album. Memories come with music, at least to me.
+ - Dig some way to create localised chat. For example, discussed with all of my friends that ever post in Paris, or in Tokyo. This could be an interesting way to create new interactions with people around me such as "Who's in town for a drink ? " or "Any tips for the best view on the city ?".
 
 # Commits
 
 - First commit made on Saturday it a first MVP, it represents around 7 hours of work. It doesn't contain the photo gallery nor some of the interactions. 
-
+- A few improvements here on there on sunday morning. I'll end here, after 10 hours roughly. The code is getting a bit messy sorry for that, I tried to demonstrate my idea.
 
 # Technicality
 

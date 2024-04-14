@@ -16,6 +16,8 @@ struct MapView: View {
     
     @State
     private var currentDetent: PresentationDetent = .fraction(1/2)
+    @State
+    private var sheetPresented: Bool = true
     
     @State private var browserContentSize: CGSize = .zero
     
@@ -25,27 +27,21 @@ struct MapView: View {
                 map
                     .task {
                         viewModel.setItems(from: browserViewModel.albums)
-                        viewModel.updateClusters(from: mapProxy.visibleRegion)
+                        await viewModel.updateClusters(from: mapProxy.visibleRegion)
                     }
                     .onChange(of: browserViewModel.selectedImageId) {
-                        guard let photo = viewModel.items.first(where: { $0.id == browserViewModel.selectedImageId }) else { return }
-                        viewModel.focusCamera(on: photo)
+                        onSelectedImageChange()
                     }
                     .onChange(of: browserViewModel.selectedAlbumId) {
-                        guard
-                            browserViewModel.selectedAlbumId != nil,
-                            let selectedAlbum = browserViewModel.albums.first(where: {
-                                $0.id == browserViewModel.selectedAlbumId
-                            })
-                        else {
-                            viewModel.resetCamera()
-                            return
-                        }
-                        viewModel.focusCamera(on: selectedAlbum)
+                        onSelectedAlbumChange()
                     }
+                    .onChange(of: browserViewModel.selectedFriendId, {
+                        onSelectedFriendChange(visibleRegion: mapProxy.visibleRegion)
+                    })
                     .onMapCameraChange(frequency: .onEnd) { context in
-                        print("here camera change")
-                        viewModel.updateClusters(from: context.region)
+                        Task {
+                            await viewModel.updateClusters(from: context.region)
+                        }
                     }
                     .coordinateSpace(.named("map"))
             }
@@ -54,8 +50,8 @@ struct MapView: View {
         .overlay {
             contentOverlay
         }
-        .sheet(isPresented: .constant(true)) {
-            BrowserView(currentDetent: $currentDetent)
+        .sheet(isPresented: $sheetPresented) {
+            BrowserStack(currentDetent: $currentDetent)
                 .background {
                     GeometryReader { proxy in
                         Color.clear
@@ -175,6 +171,47 @@ private extension MapView {
                 .fill(.ultraThinMaterial)
         }
         .id(url)
+    }
+}
+
+// MARK: - Actions
+private extension MapView {
+    func onSelectedImageChange() {
+        guard
+            let photo = viewModel.items.first(
+                where: { $0.id == browserViewModel.selectedImageId }
+            ) else
+        { return }
+        viewModel.focusCamera(on: photo)
+    }
+    
+    func onSelectedAlbumChange() {
+        guard
+            browserViewModel.selectedAlbumId != nil,
+            let selectedAlbum = browserViewModel.albums.first(where: {
+                $0.id == browserViewModel.selectedAlbumId
+            })
+        else {
+            viewModel.resetCamera()
+            return
+        }
+        viewModel.focusCamera(on: selectedAlbum)
+    }
+    
+    func onSelectedFriendChange(visibleRegion: MKCoordinateRegion) {
+        let albums = browserViewModel.getAlbumsForSelectedUser()
+        viewModel.setItems(from: albums)
+        Task {
+            await viewModel.updateClusters(from: visibleRegion)
+            
+            await MainActor.run {
+                if browserViewModel.selectedFriendId == nil {
+                    viewModel.resetCamera()
+                } else {
+                    viewModel.focusFromWorld()
+                }
+            }
+        }
     }
 }
 

@@ -50,16 +50,9 @@ private extension PlacemarkedPhoto {
 // MARK: - Actions
 private extension PlacemarkedPhoto {
     func computePoi() async {
-        let geoCoder = CLGeocoder()
-        guard let placemarks = try? await geoCoder.reverseGeocodeLocation(photo.location) else {
-            return
-        }
-        if let placemark = placemarks.first {
-            let city = placemark.locality
-            let mark = placemark.areasOfInterest?.first
-            self.pointOfInterest = mark ?? (city ?? "")
-        } else {
-            self.pointOfInterest = ""
+        self.pointOfInterest = await PlacemarkHelper.computePointOfInterest(from: photo.location) ?? ""
+        if self.pointOfInterest.isEmpty {
+            self.pointOfInterest = await PlacemarkHelper.computeCity(from: photo.location) ?? ""
         }
     }
 }

@@ -28,7 +28,7 @@ struct UnsplashService {
             "Authorization": "Client-ID \(accessKey)"
         ]
     }
-    private let pageSize: Int = 2
+    private let pageSize: Int = 100
     
     func fetchLatestImages(page: Int) async -> Result<[UnsplashImage], Error> {
         // TODO: Use Query parameters

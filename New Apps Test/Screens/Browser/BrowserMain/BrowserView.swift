@@ -10,64 +10,74 @@ import SwiftUI
 struct BrowserView: View {
     @EnvironmentObject
     private var viewModel: BrowserViewModel
+    @EnvironmentObject
+    private var coordinator: BrowserCoordinator
     
     @State
     private var messageBody: String = ""
     @FocusState
     private var isFocused: Bool
-    
+
     @Binding
     var currentDetent: PresentationDetent
     
     var body: some View {
         ScrollViewReader { scrollProxy in
-            List {
-                Group {
-                    friendsSection
-                        .id("friendsSection")
-                    
-                    if let album = viewModel.albums.first(where: { $0.id == viewModel.selectedAlbumId }) {
-                        albumDetails(for: album)
-                            .id("albumDetails")
-                        
-                        chatSection(for: album)
-                            .id("chatSection")
-                    } else {
-                        albumsSection
-                            .id("albumsSection")
-                        
-                        createAlbum
-                            .id("createAlbum")
-                    }
-                }
-                .listRowInsets(EdgeInsets())
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-            }
-            .frame(maxHeight: UIScreen.main.bounds.height)
-            .safeAreaInset(edge: .bottom) {
-                if viewModel.selectedAlbumId != nil {
-                    messageBar
-                        .onChange(of: isFocused) {
-                            if isFocused {
-                                withAnimation(.spring, completionCriteria: .logicallyComplete) {
-                                    self.currentDetent = .large
-                                } completion: {
-                                    withAnimation(.spring) {
-                                        scrollProxy.scrollTo("chatSection", anchor: .bottom)
-                                    }
-                                }
+            contentList
+                .animation(.spring, value: viewModel.selectedAlbumId)
+                .animation(.spring, value: viewModel.selectedFriendId)
+                .withMessageBar(
+                    isVisible: viewModel.selectedAlbumId != nil,
+                    onSend: { body in
+                        viewModel.sendMessage(body)
+                    },
+                    onFocusChange: { isFocused in
+                        if isFocused {
+                            self.currentDetent = .large
+                            withAnimation(.spring) {
+                                scrollProxy.scrollTo("chatSection", anchor: .bottom)
                             }
                         }
-                        .transition(.move(edge: .bottom))
-                }
-            }
-            .listStyle(.plain)
-            .scrollIndicators(.hidden)
-            .environment(\.defaultMinListHeaderHeight, 0)
-            .animation(.spring, value: viewModel.selectedAlbumId)
+                    }
+                )
         }
     }
+}
+
+// MARK: ViewBuilders
+private extension BrowserView {
+    
+    var contentList: some View {
+        List {
+            Group {
+                friendsSection
+                    .id("friendsSection")
+                
+                if let album = viewModel.albums.first(where: { $0.id == viewModel.selectedAlbumId }) {
+                    albumDetails(for: album)
+                        .id("albumDetails")
+                    
+                    chatSection(for: album)
+                        .id("chatSection")
+                } else {
+                    albumsSection
+                        .id("albumsSection")
+                    
+                    createAlbum
+                        .id("createAlbum")
+                }
+            }
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .scrollIndicators(.hidden)
+        .environment(\.defaultMinListHeaderHeight, 0)
+        .frame(maxHeight: UIScreen.main.bounds.height)
+    }
+    
 }
 
 // MARK: Albums Section Builder
@@ -166,28 +176,31 @@ private extension BrowserView {
                 ForEach(album.photos) { photo in
                     Button(
                         action: {
-                            
+                            viewModel.focusedPhoto = photo
                         },
                         label: {
                             PlacemarkedPhoto(photo: photo)
                         }
                     )
-                    
-                    .id(photo.id)
+                    .id("image_detail_\(album.id)_\(photo.id)")
                 }
                 
                 Button(
                     action: { },
                     label: {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Material.thin)
-                            .overlay {
-                                Text("Add\nphoto")
-                                    .font(.title)
-                            }
+                        VStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Material.thin)
+                                .overlay {
+                                    Text("Add +")
+                                        .font(.title.bold())
+                                }
+                                .frame(height: 100)
+                            
+                            Spacer()
+                        }
                     }
                 )
-                .frame(maxHeight: 120)
                 .frame(width: UIScreen.main.bounds.width  / 2)
             }
             .scrollTargetLayout()
@@ -227,7 +240,16 @@ private extension BrowserView {
             }
             .scrollIndicators(.hidden)
         } header: {
-            makeSectionTitle(with: "Friends")
+            HStack {
+                makeSectionTitle(with: "Friends")
+                Spacer()
+                if viewModel.selectedFriendId != nil {
+                    Button("Clear") {
+                        viewModel.selectFriend(from: nil)
+                    }
+                    .padding(.trailing, 16)
+                }
+            }
         }
     }
     
@@ -236,15 +258,20 @@ private extension BrowserView {
             ForEach(viewModel.friends) { friend in
                 Button(
                     action: {
+                        viewModel.selectFriend(from: friend.id)
                     },
                     label: {
                         VStack {
                             friendProfile(for: friend.profilePic)
                                 .frame(width: 60, height: 60, alignment: .center)
+                                .mask(Circle())
+
+                            Text(friend.username)
+                                .font(.footnote)
+                                .foregroundStyle(.white)
                         }
                     }
                 )
-                .mask(Circle())
                 .id("profilePic_\(friend.username)")
             }
         }
@@ -343,24 +370,7 @@ private extension BrowserView {
         }
         .padding(.top, 16)
     }
-    
-    var messageBar: some View {
-        HStack {
-            TextField("New Message", text: $messageBody)
-                .textFieldStyle(.roundedBorder)
-                .focused($isFocused)
-            
-            Spacer()
-            
-            Button("", systemImage: "paperplane") {
-                viewModel.sendMessage(messageBody)
-                messageBody = ""
-                isFocused = false
-            }
-        }
-        .padding(8)
-        .background(Material.ultraThickMaterial)
-    }
+
 }
 
 // MARK: Common ViewBuilders
@@ -368,7 +378,11 @@ private extension BrowserView {
     var createAlbum: some View {
         Button(
             action: {
-                
+                withAnimation(.spring, completionCriteria: .logicallyComplete) {
+                    currentDetent = .large
+                } completion: {
+                    coordinator.routeTo(.imagePicker)
+                }
             },
             label: {
                 Text("Create new Album")
@@ -379,6 +393,10 @@ private extension BrowserView {
             }
         )
         .buttonStyle(.bordered)
+        .overlay(content: {
+            NavigationLink(value: BrowserRoute.imagePicker) { }
+                .opacity(0)
+        })
         .frame(maxWidth: .infinity)
         .padding(24)
     }
@@ -394,6 +412,7 @@ private extension BrowserView {
 
 
 #Preview {
-    BrowserView(currentDetent: .constant(.medium))
+    BrowserStack(currentDetent: .constant(.medium))
         .environmentObject(BrowserViewModel())
+        .environmentObject(BrowserCoordinator())
 }

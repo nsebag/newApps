@@ -40,6 +40,21 @@ extension MapViewModel {
         }
     }
     
+    func focusFromWorld() {
+        guard let firstItem = clusters.first?.items.first else { return }
+        withAnimation(.spring) {
+            camera = .region(
+                .init(
+                    center: firstItem.location.coordinate,
+                    span: .init(
+                        latitudeDelta: 360,
+                        longitudeDelta: 360
+                    )
+                )
+            )
+        }
+    }
+    
     func focusCamera(on album: Album) {
         guard
             var minLat = album.photos.first?.location.coordinate.latitude,
@@ -78,13 +93,10 @@ extension MapViewModel {
  *  No over-engineered thing just a hack to make this prototype work with full SwiftUI
  */
 extension MapViewModel {
-    func updateClusters(from region: MKCoordinateRegion) {
-        Task {
-            let clusters = await self.cluster(from: region)
-            print("here \(clusters.count)")
-            await MainActor.run {
-                self.clusters = clusters
-            }
+    func updateClusters(from region: MKCoordinateRegion) async {
+        let clusters = await self.cluster(from: region)
+        await MainActor.run {
+            self.clusters = clusters
         }
     }
     

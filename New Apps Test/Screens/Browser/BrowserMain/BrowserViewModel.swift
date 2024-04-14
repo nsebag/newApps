@@ -16,12 +16,16 @@ class BrowserViewModel: ObservableObject {
     @Published
     private(set) var albums: [Album] = []
     
+    
+    @Published
+    var focusedPhoto: PhotoItem?
     @Published
     var selectedAlbumId: Int?
-    
     @Published
     var selectedImageId: Int?
-    
+    @Published
+    var selectedFriendId: Int?
+
     init() {
         self.currentUser = User(
             id: 0,
@@ -53,12 +57,43 @@ extension BrowserViewModel {
         else {
             selectedImageId = 0
             selectedAlbumId = nil
+            selectedFriendId = nil
             friends = makeFriends()
+            albums = makeAlbums()
             return
         }
         
         selectedAlbumId = id
         friends = selectedAlbum.users
+    }
+    
+    func getAlbumsForSelectedUser() -> [Album] {
+        guard
+            selectedFriendId != nil
+        else {
+            return makeAlbums()
+        }
+        
+        return albums.filter { album in
+            album.users.contains(where: { $0.id == selectedFriendId })
+        }
+    }
+    
+    func selectFriend(from id: Int?) {
+        guard selectedAlbumId == nil else { return }
+        guard
+            id != nil,
+            let selectedFriend = friends.first(where: { $0.id == id })
+        else {
+            friends = makeFriends()
+            albums = makeAlbums()
+            selectedFriendId = nil
+            return
+        }
+        
+        self.selectedFriendId = id
+        albums = albums.filter { $0.users.contains(selectedFriend) }
+        friends = [selectedFriend]
     }
     
     func sendMessage(_ body: String) {
@@ -218,21 +253,126 @@ private extension BrowserViewModel {
                     )
                 ],
                 users: [ kennyRogers(), dollyParton() ],
-                messages: []
+                messages: [
+                    Message(
+                        id: 0,
+                        body: "I can still feel it, coming in the air.",
+                        sender: phillCollins()
+                    ),
+                    Message(
+                        id: 1,
+                        body: "HOLD ON",
+                        sender: cindyLauper()
+                    ),
+                    Message(
+                        id: 2,
+                        body: "Japan was mesmerizing",
+                        sender: dollyParton()
+                    ),
+                    Message(
+                        id: 3,
+                        body: "Far! We've been travelling far!",
+                        sender: neilDiamond()
+                    )
+                ]
             ),
             Album(
                 id: 2,
-                name: "We are the world",
-                photos: [],
-                users: makeFriends(),
-                messages: []
-            ),
-            Album(
-                id: 3,
-                name: "Plane trips",
-                photos: [],
-                users: [ phillCollins(), stevieWonder(), neilDiamond() ],
-                messages: []
+                name: "West Coast",
+                photos: [
+                    PhotoItem(
+                        id: 13,
+                        title: "Pinky hour",
+                        image: URL(string: "https://images.unsplash.com/photo-1580655653885-65763b2597d0?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 34.098907,
+                            longitude: -118.327759
+                        )
+                    ),
+                    PhotoItem(
+                        id: 14,
+                        title: "GTA V",
+                        image: URL(string: "https://images.unsplash.com/photo-1547516358-e98f85a80f20?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 34.005166646,
+                            longitude: -118.49249803
+                        )
+                    ),
+                    PhotoItem(
+                        id: 15,
+                        title: "Venice",
+                        image: URL(string: "https://images.unsplash.com/photo-1504731231146-c0f65dc6a950?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 33.988270,
+                            longitude: -118.472023
+                        )
+                    ),
+                    PhotoItem(
+                        id: 16,
+                        title: "Hidden gem",
+                        image: URL(string: "https://images.unsplash.com/photo-1606330978040-5e0ea51a6118?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 34.0919452,
+                            longitude: -118.6021321
+                        )
+                    ),
+                    PhotoItem(
+                        id: 17,
+                        title: "Santa Paradise",
+                        image: URL(string: "https://images.unsplash.com/photo-1562749536-5642fe7bb115?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 34.420830,
+                            longitude: -119.698189
+                        )
+                    ),
+                    PhotoItem(
+                        id: 18,
+                        title: "Ocean view",
+                        image: URL(string: "https://images.unsplash.com/photo-1598112662885-56d5dcbaca60?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 36.55524,
+                            longitude: -121.92329
+                        )
+                    ),
+                    PhotoItem(
+                        id: 19,
+                        title: "Bumpin'",
+                        image: URL(string: "https://images.unsplash.com/photo-1636086170815-0e5503c38a60?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+                        location: CLLocation(
+                            latitude: 34.010124,
+                            longitude: -118.415016
+                        )
+                    )
+                ],
+                users: [
+                    janeFonda(),
+                    phillCollins(),
+                    cindyLauper(),
+                    whitneyHouston(),
+                    stevieWonder()
+                ],
+                messages: [
+                    Message(
+                        id: 0,
+                        body: "I can still feel it, coming in the air.",
+                        sender: phillCollins()
+                    ),
+                    Message(
+                        id: 1,
+                        body: "HOLD ON",
+                        sender: cindyLauper()
+                    ),
+                    Message(
+                        id: 2,
+                        body: "Japan was mesmerizing",
+                        sender: dollyParton()
+                    ),
+                    Message(
+                        id: 3,
+                        body: "Far! We've been travelling far!",
+                        sender: neilDiamond()
+                    )
+                ]
             )
         ]
     }
@@ -267,7 +407,7 @@ private extension BrowserViewModel {
     func whitneyHouston() -> User {
         User(
             id: 3,
-            username: "houstonNoProblem",
+            username: "witHouston",
             profilePic: URL(string: "https://media.nostalgie.fr/1900x1200/2017/06/whitney-houston_4657.jpg"),
             albums: []
         )
@@ -276,7 +416,7 @@ private extension BrowserViewModel {
     func neilDiamond() -> User {
         User(
             id: 4,
-            username: "theRealDiamond",
+            username: "realDiamond",
             profilePic: URL(string: "https://www.liveabout.com/thmb/iHsqUQVVCQVzksj12vZ-z7iwOXo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/neil-diamond-80s-5c5327804cedfd0001f91689.jpg"),
             albums: []
         )
@@ -294,7 +434,7 @@ private extension BrowserViewModel {
     func kennyRogers() -> User {
         User(
             id: 6,
-            username: "kennyRogers78",
+            username: "rogers78",
             profilePic: URL(string: "https://cdn.britannica.com/73/205073-050-4BEBDF80/Kenny-Rogers-1970.jpg"),
             albums: []
         )

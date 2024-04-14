@@ -53,16 +53,9 @@ struct MapCluster: Identifiable, Hashable {
     init(id: Int, items: [PhotoItem]) {
         self.id = id
         self.items = items
-        let intoCoord =  CLLocationCoordinate2D(latitude: 0.0,longitude: 0.0)
-        let factor = 1.0 / Double(items.count)
-        self.center = items.reduce( intoCoord ) { average, mapItem in
-            let itemCoord = mapItem.location.coordinate
-            let lat = itemCoord.latitude * factor
-            let lon = itemCoord.longitude * factor
-            return CLLocationCoordinate2D(
-                latitude: average.latitude + lat,
-                longitude: average.longitude + lon
-            )
-        }
+
+        let averageLatitude = items.map { $0.location.coordinate.latitude }.reduce(0.0, +) / Double(items.count)
+        let averageLongitude = items.map { $0.location.coordinate.longitude }.reduce(0.0, +) / Double(items.count)
+        self.center = CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
     }
 }
